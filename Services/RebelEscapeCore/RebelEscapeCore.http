@@ -1,0 +1,6 @@
+@RebelEscapeCore_HostAddress = http://localhost:5279
+
+GET {{RebelEscapeCore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
