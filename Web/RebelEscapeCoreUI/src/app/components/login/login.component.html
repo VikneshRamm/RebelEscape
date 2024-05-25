@@ -1,0 +1,16 @@
+<div class="login-main">
+    <mat-card class="mat-card">
+        <mat-card-content>
+            <mat-card-title>Login</mat-card-title>
+            <div>
+                <div>
+                    <p>Username</p>
+                    <mat-form-field>
+                        <input matNativeControl type="text" [(ngModel)]="userName">
+                    </mat-form-field>
+                </div>  
+                <button (click)="onLoginClick()" mat-raised-button color="primary">Login</button>
+            </div>            
+        </mat-card-content>
+    </mat-card>
+</div>
