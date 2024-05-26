@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Game Request</h2>
+<mat-dialog-content>
+  Do you accept a game request from <b>{{playerName}}</b>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoButtonClick()">No</button>
+  <button mat-button cdkFocusInitial (click)="onAcceptButtonClick()">Accept</button>
+</mat-dialog-actions>

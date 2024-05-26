@@ -8,9 +8,11 @@ import { HttpService } from './http.service';
 export class AuthService {
 
   private _apiToken: string;
+  private _userId: string;
 
   constructor(private httpService: HttpService) {
     this._apiToken = '';
+    this._userId = '';
    }
 
   login(userName: string): Observable<any> {
@@ -18,11 +20,16 @@ export class AuthService {
       "userName": userName
     }).pipe(
         map(response => {
-          this._apiToken = response['apiToken'];         
+          this._apiToken = response['token'];
+          this._userId = response['userId'];
     }));
   }
 
   public get apiToken(): string {
     return this._apiToken;
-  }  
+  }
+
+  public get userId(): string {
+    return this._userId;
+  }
 }

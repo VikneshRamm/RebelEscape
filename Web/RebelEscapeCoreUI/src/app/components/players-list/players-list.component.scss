@@ -1,0 +1,57 @@
+.demo-table {
+    width: 100%;
+  }
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+}
+
+.demo-row-is-clicked {
+  font-weight: bold;
+}
+
+.players-list-component-main {
+  width: 100%;
+  height: calc(100% - 5em);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.players-list-container {
+  width: 30%;
+  min-width: 700px;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.players-list-table-container {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.request-game-button {
+  margin: 0.75em;
+  padding: 1em;
+  font-size: xx-large;
+}
+
+.players-list-no-online-cont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.players-list-no-online-cont h1 {
+  color: cadetblue;
+}

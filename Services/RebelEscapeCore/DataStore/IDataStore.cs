@@ -4,15 +4,17 @@ namespace RebelEscapeCore.DataStore
 {
     public interface IDataStore
     {
-        void StoreConnectionId(string userName, string connectionId);
+        void StoreConnection(string userName, string playerId, string userId);
 
-        IEnumerable<ConnectedUserDetails> GetConnectionIds();
+        IEnumerable<ConnectedPlayerDetails> GetConnectedPlayers();
 
-        void RemoveConnectionId(string connectionId);
+        void RemoveConnection(string connectionId);
 
-        bool IsUserExists(string userName);
+        bool IsPlayerAlreadyConnected(string playerId);
 
-        string GetUserNameByConnectionId(string connectionId);
+        string GetConnectionIdFromPlayerId(string playerId);
+
+        string GetUserNameFromPlayerId(string playerId);
 
         void CreateGame(GameDetails gameDetails);
 

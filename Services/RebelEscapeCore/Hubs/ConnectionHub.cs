@@ -22,20 +22,23 @@ namespace RebelEscapeCore.Hubs
         {
             var connectionId = Context.ConnectionId;
             var userName = Context?.User?.Identity?.Name;
-            if (userName == null)
+            var identity = Context?.User?.Identities.FirstOrDefault();
+            var claim = identity?.Claims.First(claim => claim.Type == "userId");
+            string? playerId = claim?.Value;
+            if (userName == null || playerId == null)
             {
                 return Task.CompletedTask;
             }
 
-            if (_dataStore.IsUserExists(userName))
+            if (_dataStore.IsPlayerAlreadyConnected(playerId))
             {
-                throw new Exception("User already exists");
+                throw new Exception("Player Already connected");
             }
 
             Console.WriteLine("Connection opened");
             Console.WriteLine($"{connectionId} -- {userName}");
-            _dataStore.StoreConnectionId(userName, connectionId);
-            Clients.All.SendAsync("RefreshConnectedUserList", _dataStore.GetConnectionIds());
+            _dataStore.StoreConnection(userName, playerId, connectionId);
+            RefershConnectedPlayers();
             return base.OnConnectedAsync();
         }
 
@@ -50,8 +53,8 @@ namespace RebelEscapeCore.Hubs
 
             Console.WriteLine("Connection closed");
             Console.WriteLine($"{connectionId} -- {userName}");
-            _dataStore.RemoveConnectionId(userName);
-            Clients.All.SendAsync("RefreshConnectedUserList", _dataStore.GetConnectionIds());
+            _dataStore.RemoveConnection(connectionId);
+            RefershConnectedPlayers();
             return base.OnDisconnectedAsync(exception);
         }
 
@@ -63,15 +66,16 @@ namespace RebelEscapeCore.Hubs
         }
 
         [HubMethodName("GetResult")]
-        public async Task<ClientStatus> GetResultAsync(string clientId)
+        public async Task<ClientStatus> GetResultAsync(string targetPlayerId)
         {
-            var status = await Clients.Client(clientId).InvokeAsync<ClientStatus>("GetCurrentStatus", CancellationToken.None);
+            var targetPlayerConnectionId = _dataStore.GetConnectionIdFromPlayerId(targetPlayerId);
+            var status = await Clients.Client(targetPlayerConnectionId).InvokeAsync<ClientStatus>("GetCurrentStatus", CancellationToken.None);
             Console.WriteLine($"{status.Status} -- {status.Id}");
             return status;
         }
 
         [HubMethodName("RequestGame")]
-        public async Task<int> GetGameRequestConfirmation(GameRequestParameters parameters)
+        public async Task<GameConfirmationResult> GetGameRequestConfirmation(GameRequestParameters parameters)
         {
             return await _gameEngineService.GetGameRequestConfirmation(parameters);
         }
@@ -86,6 +90,22 @@ namespace RebelEscapeCore.Hubs
         public void PlayerMove(MoveDetails moveDetails)
         {
             _gameEngineService.PlayerMove(moveDetails);
+        }
+
+        private void RefershConnectedPlayers()
+        {
+            var connectedPlayersWithConnectionId = _dataStore.GetConnectedPlayers();
+            var connectedPlayersWithoutConnectionId = GetConnectedPlayers(connectedPlayersWithConnectionId);
+            Clients.All.SendAsync("RefreshConnectedUserList", connectedPlayersWithoutConnectionId);
+        }
+
+        private IEnumerable<PlayerDetails> GetConnectedPlayers(IEnumerable<ConnectedPlayerDetails> connectedPlayerDetails)
+        {
+            return connectedPlayerDetails.Select(player => new PlayerDetails()
+            {
+                PlayerId = player.PlayerId,
+                UserName = player.UserName,
+            });
         }
     }
 }
