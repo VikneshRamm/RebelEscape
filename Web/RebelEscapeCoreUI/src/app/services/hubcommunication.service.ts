@@ -18,6 +18,10 @@ export class HubCommunicationService {
     }
   }
 
+  getConnectionState(): signalR.HubConnectionState | undefined {
+    return this.connection?.state;
+  }
+
   connectToHub(accessToken: string, hubUrl: string) {
     if (this.connection !== undefined && this.connection.connectionId
       !== null) {
@@ -62,6 +66,9 @@ export class HubCommunicationService {
 
   async callServerFunctionWithReturnValue<T>(functionName: string, parameters: any) {
     if (this.connection) {
+      if (parameters == null || parameters == undefined) {
+        return this.connection.invoke<T>(functionName);
+      }
       return this.connection.invoke<T>(functionName, parameters);
     }
     else {

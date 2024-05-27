@@ -1,0 +1,9 @@
+<div>
+    <p>Player Type: {{getPlayerTypeString()}}</p>
+    <div *ngFor="let row of board" class="row">
+      <div *ngFor="let cell of row" class="box" (click)="makeMove(cell)"
+       [class.castle-cell]="cell.position == 1 && cell.stage == NUMBER_OF_STATGES"
+       [class.done-cell] = "cell.stage < currentStage"
+       [class.future-cell] = "cell.stage > currentStage && !(cell.position == 1 && cell.stage == NUMBER_OF_STATGES)"></div>
+    </div>
+  </div>

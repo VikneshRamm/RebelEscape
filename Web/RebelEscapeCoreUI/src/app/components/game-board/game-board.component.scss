@@ -1,0 +1,35 @@
+.row {
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: center;
+  }
+  
+  .box {
+    width: 150px;
+    height: 150px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    background-image: url(../../../assets/board-grass.png);
+    background-size: 100% 100%;
+  }
+
+  .castle-cell {
+    background-image: url(../../../assets/castle-door.png);
+    background-size: 100% 100%;
+    pointer-events: none;
+  }
+
+  .done-cell {
+    pointer-events: none;
+    filter: grayscale(1);
+    opacity: 0.8;  
+  }
+
+  .future-cell {
+    pointer-events: none;
+    opacity: 0.3;
+  }

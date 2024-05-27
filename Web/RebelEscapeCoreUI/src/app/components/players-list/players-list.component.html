@@ -18,13 +18,13 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr
                 mat-row
-                (click)="selectedPLayerRow = i"
-                [class.demo-row-is-clicked]="selectedPLayerRow == i"
+                (click)="selectedPlayerRow = i"
+                [class.demo-row-is-clicked]="selectedPlayerRow == i"
                 *matRowDef="let row; columns: displayedColumns;let i = index;"
             ></tr>
           </table>
         </div>
-        <button class="request-game-button" (click)="onRequestGameClick()" mat-raised-button color="primary" [disabled]="selectedPLayerRow == -1">Call for a Fight</button>
+        <button class="request-game-button" (click)="onRequestGameClick()" mat-raised-button color="primary" [disabled]="selectedPlayerRow == -1">Call for a Fight</button>
     </div>
     <div class="players-list-no-online-cont" *ngIf="connectedPlayerList?.length == 0">
         <h1>There are no other players currently online now</h1>

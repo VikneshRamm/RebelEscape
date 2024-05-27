@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { GameConfirmDialogService } from '../../services/gameconfirmdialog.service';
 import { AuthService } from '../../services/auth.service';
 import { GameConfirmationResult } from '../../models/gameconfirmation.model';
+import { GameplayService } from '../../services/gameplay.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-players-list',
@@ -21,14 +23,16 @@ export class PlayersListComponent {
 
   public connectedPlayerList!: PlayerInfo[];
   public readonly displayedColumns: string[] = ['sno', 'username', 'playerId'];
-  public selectedPLayerRow!: number;
+  public selectedPlayerRow!: number;
+  private subscription: Subscription = new Subscription();
   constructor(private _hubConnectionService: HubconnectionService,
     private _notificationService: NotificationService,
     private _router: Router,
     private _gameConfirmDialogService: GameConfirmDialogService,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private _gamePlayService: GameplayService
   ) {
-    this.selectedPLayerRow = -1;
+    this.selectedPlayerRow = -1;    
   }
 
 
@@ -36,11 +40,16 @@ export class PlayersListComponent {
     try {
       let isConnectionSuccess = await this._hubConnectionService.initializeConnection();
       if (isConnectionSuccess) {
-        this._hubConnectionService.refreshPlayerListSubject.subscribe(playerInfo => {
+        this.subscription = this._hubConnectionService.refreshPlayersList$.subscribe(playerInfo => {
           this.connectedPlayerList = playerInfo;
-          this.selectedPLayerRow = -1;
-        })
+          this.selectedPlayerRow = -1;
+        });
         this._gameConfirmDialogService.initializeEventListeners();
+        this._gamePlayService.initializeEventListners();
+        this._gamePlayService.gameStartedNotification.subscribe(() => {
+          this._router.navigateByUrl('/game-board');
+        });
+        this.connectedPlayerList = await this._hubConnectionService.getOnlinePlayersList();
       }
       else {
         this.routeBackToLogin();
@@ -53,13 +62,17 @@ export class PlayersListComponent {
     }
   }
 
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
+
   routeBackToLogin() {
     this._router.navigateByUrl('/login');
   }
 
   async onRequestGameClick() {
     let result: GameConfirmationResult = await this._gameConfirmDialogService.requestGameAsync(this._authService.userId,
-       this.connectedPlayerList[this.selectedPLayerRow].playerId);
+       this.connectedPlayerList[this.selectedPlayerRow].playerId);
     switch (result) {
       case GameConfirmationResult.Rejected:
         this._notificationService.showNotification("The request player has rejected your game request", 3000);
@@ -68,6 +81,8 @@ export class PlayersListComponent {
         this._notificationService.showNotification("The request player has not accepted/rejected with a particular time", 3000);
         break;
       default:
+        this._gamePlayService.startGame(this._authService.userId,
+          this.connectedPlayerList[this.selectedPlayerRow].playerId)
         this._notificationService.showNotification("The request player has accepted your game request", 3000);
     }
   }

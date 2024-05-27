@@ -9,17 +9,20 @@ import { GameAcceptDialogComponent } from '../components/game-accept-dialog/game
   providedIn: 'root'
 })
 export class GameConfirmDialogService {
-
-  private popupCloseSubject: Subject<GameConfirmationResult> = new Subject<GameConfirmationResult>();
   private _dialogRef!: MatDialogRef<GameAcceptDialogComponent>;
   private _dialogTimeoutId: any;
   private _isWaitingForAnotherRequest: boolean = false;
+  private isInitializationDone = false;
 
   constructor(private _hubCommunicationService: HubCommunicationService,
     public _dialog: MatDialog
-  ) { }
+  ) { 
+  }
 
   initializeEventListeners() {
+    if (this.isInitializationDone) {
+      return;
+    }    
     this._hubCommunicationService.registerEvent("GameRequestConfirmation", async (playerName: string) => {
       if (this._isWaitingForAnotherRequest) {
         return GameConfirmationResult.Rejected; // just reject when a player is waiting for confirmation from another player
@@ -31,6 +34,7 @@ export class GameConfirmDialogService {
       let result = await promise;
       return result;
     })
+    this.isInitializationDone = true;
   }
 
   async sleep(ms: number): Promise<GameConfirmationResult> {

@@ -92,6 +92,14 @@ namespace RebelEscapeCore.Hubs
             _gameEngineService.PlayerMove(moveDetails);
         }
 
+        [HubMethodName("GetOnlinePlayers")]
+        public IEnumerable<PlayerDetails> GetOnlinePlayersList()
+        {
+            var connectedPlayersWithConnectionId = _dataStore.GetConnectedPlayers();
+            var connectedPlayersWithoutConnectionId = GetConnectedPlayers(connectedPlayersWithConnectionId);
+            return connectedPlayersWithoutConnectionId;
+        }
+
         private void RefershConnectedPlayers()
         {
             var connectedPlayersWithConnectionId = _dataStore.GetConnectedPlayers();
