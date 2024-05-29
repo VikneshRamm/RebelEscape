@@ -29,7 +29,7 @@ export class GameBoardComponent {
   private currentStageCache: number = 0;
 
   public board: Cell[][] = [];
-  public currentStage: number;
+  public currentStage: number = -1;
   public playerTypeImageSrc: string = '';
   public pendingSeconds: number = -1;
   public showWaitForOpponentOverlay: boolean;
@@ -38,18 +38,19 @@ export class GameBoardComponent {
   public showAfterStageResultMessage: boolean;
   public winnerMessage: string = '';
   public loserMessage: string = '';
+  public showPlayerTypeOverlay: boolean;
 
   constructor(private _gamePlayService: GameplayService,
     private _notificationService: NotificationService,
     private _router: Router
-  ) { 
-    this.currentStage = 1;
+  ) {     
     this.showWinnerOverlay = this.showLooserOverlay
      = this.showWaitForOpponentOverlay
-     = this.showAfterStageResultMessage = false;
+     = this.showAfterStageResultMessage
+     = this.showPlayerTypeOverlay = false;
   }
 
-  ngOnInit() {
+  ngOnInit() {    
     this._gamePlayService.initializeEventListners();
     this._gameParams =  this._gamePlayService.gameStartedParameters;
     this.subscription = this._gamePlayService.gameMoveNotification$.subscribe((result) => this.afterMoveResult(result));
@@ -57,11 +58,9 @@ export class GameBoardComponent {
     this.playerTypeImageSrc = this._gameParams.playerType == PlayerTypes.soldier
      ? '../../../assets/soldier.png' :
      '../../../assets/rebel.png' ;
-    this.pendingSeconds = 10;    
-  }
-
-  ngAfterViewInit() {
-    this.startStageTimer();
+    this.pendingSeconds = 10;
+    this.showPlayerTypeOverlay = true;
+    this.startPlayerTypeOverlayTimer();  
   }
 
   ngOnDestroy() {
@@ -133,7 +132,6 @@ export class GameBoardComponent {
       this.pendingSeconds--;
     }, 1000)
     this.timeoutRef = setTimeout(() => {
-      this._notificationService.showErrorNotification("Timeout occurred. You cannot choose your move");
       this.move(-1);
     }, 10000)
   }
@@ -143,7 +141,7 @@ export class GameBoardComponent {
       this.showWinnerOverlay = false;
       this.showLooserOverlay = false;
       this._router.navigateByUrl('/players-list')
-    }, 10000);
+    }, 5000);
   }
 
   startStageResultMessageTimer() {
@@ -153,6 +151,14 @@ export class GameBoardComponent {
       this.currentStage++;
       this.startStageTimer();
     }, 3000);
+  }
+
+  startPlayerTypeOverlayTimer() {
+    setTimeout(() => {
+      this.showPlayerTypeOverlay = false;
+      this.currentStage = 1;
+      this.startStageTimer();
+    }, 5000);
   }
 
   private getWinnerMessage(moveResult: MoveResult): string {

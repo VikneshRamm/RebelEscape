@@ -83,7 +83,6 @@ export class PlayersListComponent {
       default:
         this._gamePlayService.startGame(this._authService.userId,
           this.connectedPlayerList[this.selectedPlayerRow].playerId)
-        this._notificationService.showNotification("The request player has accepted your game request", 3000);
     }
   }
 }

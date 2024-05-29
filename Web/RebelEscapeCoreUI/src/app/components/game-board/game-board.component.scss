@@ -101,6 +101,15 @@
   font-size: 5rem;
 }
 
+.player-type-overlay {
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.player-type-overlay img {
+  height: 70%;
+}
+
 @media (max-height: 1200px) {
   .box {
     width: 50px;

@@ -10,6 +10,10 @@
       </div>
     </div>
     <div class="board-cells-container">
+      <div class="board-cells-container-overlay player-type-overlay" *ngIf="showPlayerTypeOverlay" >
+        <h1 class="text-shadow-drop-center">You are a: {{getPlayerTypeString()}}</h1>
+        <img class="scale-in-center" [src]="playerTypeImageSrc">
+      </div>
       <div class="board-cells-container-overlay" *ngIf="showWaitForOpponentOverlay">
         <h1 class="text-shadow-drop-center">Waiting for opponent move...</h1>
         <div class="loader"></div>
