@@ -44,12 +44,13 @@ export class GameplayService {
     this._hubCommunicationService.callServerFunction("StartGame", gameStartParams);
   }
 
-  play(move: number) {
+  play(move: number, currentStage: number) {
     let moveDetails: MoveDetails = {
       gameId: this._gameStartedParameters.gameId,
       playerId: this._gameStartedParameters.playerId,
       move: move,
-      playerType: this._gameStartedParameters.playerType
+      playerType: this._gameStartedParameters.playerType,
+      currentStage: currentStage
     }
     this._hubCommunicationService.callServerFunction("PlayerMove", moveDetails);
   }

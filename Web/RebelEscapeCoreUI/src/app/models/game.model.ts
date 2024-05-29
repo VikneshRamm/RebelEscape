@@ -13,10 +13,15 @@ export interface MoveDetails {
     gameId: string;
     playerId: string;
     playerType: PlayerTypes,
-    move: number
+    move: number;
+    currentStage: number;
 }
 
 export interface MoveResult {
     isGameOver: boolean;
     winnerPlayerId: string;
+    soldierMove: number;
+    rebelMove: number;
+    rebelScore: number;
+    soldierScore: number;
 }
