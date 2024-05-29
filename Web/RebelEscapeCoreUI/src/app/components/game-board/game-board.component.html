@@ -1,9 +1,20 @@
-<div>
-    <p>Player Type: {{getPlayerTypeString()}}</p>
-    <div *ngFor="let row of board" class="row">
-      <div *ngFor="let cell of row" class="box" (click)="makeMove(cell)"
-       [class.castle-cell]="cell.position == 1 && cell.stage == NUMBER_OF_STATGES"
-       [class.done-cell] = "cell.stage < currentStage"
-       [class.future-cell] = "cell.stage > currentStage && !(cell.position == 1 && cell.stage == NUMBER_OF_STATGES)"></div>
+<div class="game-board-container">
+    <div class="game-board-header">
+      <div class="player-type-container">
+        <h2>Player Type: {{getPlayerTypeString()}}</h2>
+        <img [src]="playerTypeImageSrc">
+      </div>
+      <div class="timer-container">
+        <h3>Timer</h3>
+        <h1>{{pendingSeconds}}</h1>
+      </div>
     </div>
+    <div class="board-cells-container">
+      <div *ngFor="let row of board" class="row">
+        <div *ngFor="let cell of row" class="box" (click)="makeMove(cell)"
+         [class.castle-cell]="cell.position == 1 && cell.stage == NUMBER_OF_STATGES"
+         [class.done-cell] = "cell.stage < currentStage"
+         [class.future-cell] = "cell.stage > currentStage && !(cell.position == 1 && cell.stage == NUMBER_OF_STATGES)"></div>
+      </div>
+    </div>    
   </div>

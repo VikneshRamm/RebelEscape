@@ -5,13 +5,8 @@
   }
   
   .box {
-    width: 150px;
-    height: 150px;
-    margin-right: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
+    width: 100px;
+    height: 100px;
     cursor: pointer;
     background-image: url(../../../assets/board-grass.png);
     background-size: 100% 100%;
@@ -33,3 +28,37 @@
     pointer-events: none;
     opacity: 0.3;
   }
+
+  .player-type-container {
+    height: 100%;
+  }
+
+  .timer-container {
+    height: 100%;
+  }
+
+  .player-type-container img {
+    height: 75px;
+  }
+
+  .game-board-header {
+    display: flex;
+    justify-content: space-evenly;
+    height: 150px;
+  }
+
+  .timer-container h1 {
+    font-size: xxx-large;
+    color: red;
+  }
+
+  .game-board-container {
+    width: 100%;
+    height: calc(100% - 5em);
+  }
+
+  .board-cells-container {
+  height: calc(100% - 150px);
+    /* border: 1px solid black; */
+    overflow: auto;
+}

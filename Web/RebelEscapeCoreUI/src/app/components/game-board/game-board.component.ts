@@ -20,12 +20,14 @@ export interface Cell {
 })
 export class GameBoardComponent {
   
-  public readonly NUMBER_OF_STATGES: number = 5;
+  public readonly NUMBER_OF_STATGES: number = 7;
   private _gameParams!: GameStartedParameters;
   private subscription: Subscription = new Subscription();
 
   public board: Cell[][] = [];
   public currentStage: number;
+  public playerTypeImageSrc: string = '';
+  public pendingSeconds: string = '-';
 
   constructor(private _gamePlayService: GameplayService,
     private _notificationService: NotificationService,
@@ -35,14 +37,16 @@ export class GameBoardComponent {
   }
 
   ngOnInit() {
-    this._gamePlayService.initializeEventListners();
-    this._gameParams =  this._gamePlayService.gameStartedParameters;
-    this.subscription = this._gamePlayService.gameMoveNotification$.subscribe((result) => this.afterMoveResult(result));
-    this.generateBoard();    
+    // this._gamePlayService.initializeEventListners();
+    // this._gameParams =  this._gamePlayService.gameStartedParameters;
+    // this.subscription = this._gamePlayService.gameMoveNotification$.subscribe((result) => this.afterMoveResult(result));
+    this.generateBoard();
+    this.playerTypeImageSrc = '../../../assets/soldier.png';
+    this.pendingSeconds = '10';
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
 
   private generateBoard() {
@@ -80,7 +84,7 @@ export class GameBoardComponent {
   }
 
   getPlayerTypeString(): string {    
-      return PlayerTypes[this._gameParams.playerType];
+      return PlayerTypes[0];
   }
  
 }
