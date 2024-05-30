@@ -5,7 +5,8 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "JWT_TOKEN_KEY": "temporary-very-very-very-long-key-for-development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5208"
@@ -15,7 +16,8 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "JWT_TOKEN_KEY": "temporary-very-very-very-long-key-for-development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7152;http://localhost:5208"

@@ -9,5 +9,7 @@
         public PlayerTypes PlayerType { get; set; }
 
         public int Move { get; set; }
+
+        public int CurrentStage { get; set; }
     }
 }

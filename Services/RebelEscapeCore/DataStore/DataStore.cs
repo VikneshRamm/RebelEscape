@@ -4,38 +4,52 @@ namespace RebelEscapeCore.DataStore
 {
     public class DataStore : IDataStore
     {
-        private readonly Dictionary<string, string> _connectionIds;
+        private readonly Dictionary<string, ConnectedPlayerDetails> _connectedPlayers;
         private readonly Dictionary<string, GameDetails> _gameDetails;
 
         public DataStore()
         {
-            _connectionIds = new Dictionary<string, string>();
+            _connectedPlayers = new Dictionary<string, ConnectedPlayerDetails>();
             _gameDetails = new Dictionary<string, GameDetails>();
         }
 
-        public IEnumerable<ConnectedUserDetails> GetConnectionIds()
+        public IEnumerable<ConnectedPlayerDetails> GetConnectedPlayers()
         {
-            return _connectionIds.Select(k => new ConnectedUserDetails() { UserName = k.Key, ConnectionId = k.Value });
+            return _connectedPlayers.Values;
         }
 
-        public bool IsUserExists(string userName)
+        public bool IsPlayerAlreadyConnected(string playerId)
         {
-            return _connectionIds.ContainsKey(userName);
+            return _connectedPlayers.ContainsKey(playerId);
         }
 
-        public void RemoveConnectionId(string userName)
+        public void RemoveConnection(string connectionId)
         {
-            _connectionIds.Remove(userName);
+            string playerId = _connectedPlayers.FirstOrDefault(player => player.Value.ConnectionId == connectionId).Key;
+            if (playerId != null)
+            {
+                _connectedPlayers.Remove(playerId);
+            }
         }
 
-        public void StoreConnectionId(string userName, string connectionId)
+        public string GetConnectionIdFromPlayerId(string playerId)
         {
-            _connectionIds.Add(userName, connectionId);
+            return _connectedPlayers[playerId].ConnectionId;
         }
 
-        public string GetUserNameByConnectionId(string connectionId)
+        public string GetUserNameFromPlayerId(string playerId)
         {
-            return _connectionIds.First(item => item.Value == connectionId).Key;
+            return _connectedPlayers[playerId].UserName;
+        }
+
+        public void StoreConnection(string userName, string playerId, string connectionId)
+        {
+            _connectedPlayers.Add(playerId, new ConnectedPlayerDetails()
+            {
+                UserName = userName,
+                ConnectionId = connectionId,
+                PlayerId = playerId,
+            });
         }
 
         public void CreateGame(GameDetails gameDetails)

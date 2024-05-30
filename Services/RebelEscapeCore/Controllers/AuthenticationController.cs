@@ -22,11 +22,12 @@ namespace RebelEscapeCore.Controllers
         public IActionResult Login(LoginModel loginModel)
         {
             LoginSuccessResponseModel model = new LoginSuccessResponseModel();
-            model.Token = GenerateToken(loginModel);
+            model.UserId = Guid.NewGuid().ToString();
+            model.Token = GenerateToken(loginModel, model.UserId);
             return Ok(model);
         }
 
-        private string GenerateToken(LoginModel user)
+        private string GenerateToken(LoginModel user, string userId)
         {
             string? jwtTokenKey = Environment.GetEnvironmentVariable("JWT_TOKEN_KEY");
             if (string.IsNullOrEmpty(jwtTokenKey))
@@ -40,6 +41,7 @@ namespace RebelEscapeCore.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserName),
                 new Claim(ClaimTypes.Name, user.UserName),
+                new Claim("userId", userId),
             };
 
             SecurityTokenDescriptor tokenDescriptor = new ()

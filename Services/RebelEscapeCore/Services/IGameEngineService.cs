@@ -4,7 +4,7 @@ namespace RebelEscapeCore.Services
 {
     public interface IGameEngineService
     {
-        Task<int> GetGameRequestConfirmation(GameRequestParameters parameters);
+        Task<GameConfirmationResult> GetGameRequestConfirmation(GameRequestParameters parameters);
 
         Task StartGame(GameStartParameters parameters);
 

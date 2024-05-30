@@ -1,0 +1,39 @@
+<div class="game-board-container">
+    <div class="game-board-header">
+      <div class="player-type-container">
+        <h2>Player Type: {{getPlayerTypeString()}}</h2>
+        <img [src]="playerTypeImageSrc">
+      </div>
+      <div class="timer-container">
+        <h3>Timer</h3>
+        <h1>{{pendingSeconds}}</h1>
+      </div>
+    </div>
+    <div class="board-cells-container">
+      <div class="board-cells-container-overlay player-type-overlay" *ngIf="showPlayerTypeOverlay" >
+        <h1 class="text-shadow-drop-center">You are a: {{getPlayerTypeString()}}</h1>
+        <img class="scale-in-center" [src]="playerTypeImageSrc">
+      </div>
+      <div class="board-cells-container-overlay" *ngIf="showWaitForOpponentOverlay">
+        <h1 class="text-shadow-drop-center">Waiting for opponent move...</h1>
+        <div class="loader"></div>
+      </div>
+      <div class="board-cells-container-overlay confetti-background" *ngIf="showWinnerOverlay">
+        <h1 class="scale-in-center">{{winnerMessage}}</h1>
+      </div>
+      <div class="board-cells-container-overlay thumbs-down-background" *ngIf="showLooserOverlay">
+        <h1 class="scale-in-center">{{loserMessage}}</h1>
+      </div>
+      <div class="board-cells-container-overlay" *ngIf="showAfterStageResultMessage">
+        <h1 class="scale-in-center">{{getAfterResultMessage()}}</h1>
+      </div>
+      <div *ngFor="let row of board" class="row">
+        <div *ngFor="let cell of row" class="box" (click)="makeMove(cell)"
+         [class.castle-cell]="cell.position == 1 && cell.stage == NUMBER_OF_STATGES"
+         [class.done-cell] = "cell.stage < currentStage"
+         [class.future-cell] = "cell.stage > currentStage && !(cell.position == 1 && cell.stage == NUMBER_OF_STATGES)"
+         [class.vibrate-1]="cell.stage == currentStage && cell.stage !== NUMBER_OF_STATGES"
+         [class.wobble-hor-bottom]="cell.isSelected"></div>
+      </div>
+    </div>    
+  </div>
